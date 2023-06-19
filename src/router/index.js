@@ -25,7 +25,7 @@ export const routes = [
     component: MainUserVue,
     children: [
       {
-        name: '首页',
+        // name: '首页',
         meta: {
           icon: 'el-icon-s-home',
           title: '首页'
@@ -35,7 +35,7 @@ export const routes = [
         component: () => import('../views/scoket/index.vue')
       },
       {
-        name: '即时聊天',
+        // name: '即时聊天',
         meta: {
           icon: 'el-icon-s-home',
           title: '即时聊天'
@@ -45,7 +45,7 @@ export const routes = [
         component: () => import('../views/user/index.vue')
       },
       {
-        name: '商品列表',
+        // name: '商品列表',
         meta: {
           title: '商品列表'
         },
@@ -54,7 +54,7 @@ export const routes = [
         component: () => import('../views/user/product.vue')
       },
       {
-        name: '公告指南',
+        // name: '公告指南',
         meta: {
           title: '公告指南'
         },
@@ -63,7 +63,7 @@ export const routes = [
         component: () => import('../views/user/notice.vue')
       },
       {
-        name: 'SD',
+        // name: 'SD',
         meta: {
           title: 'SD'
         },
@@ -72,7 +72,7 @@ export const routes = [
         component: () => import('../views/sdPage/index.vue')
       },
       {
-        name: 'FS',
+        // name: 'FS',
         meta: {
           title: 'FS'
         },
@@ -81,7 +81,7 @@ export const routes = [
         component: () => import('../views/fsPage/index.vue')
       },
       {
-        name: 'MJ',
+        // name: 'MJ',
         meta: {
           title: 'MJ'
         },
@@ -90,7 +90,7 @@ export const routes = [
         component: () => import('../views/mj/index.vue')
       },
       {
-        name: 'newBing',
+        // name: 'newBing',
         meta: {
           title: 'newBing'
         },

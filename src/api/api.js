@@ -8,7 +8,7 @@ export const baseUrl = 'https://gpt.v-wim.xyz-a-s'
  * @LastEditTime: 2023-05-12 17:44:25
  * @FilePath: /chat_gpt/src/api/api.js
  */
-export const baseUrl = 'https://gpt.v-wim.xyz'
+export const baseUrl = 'http://localhost:8081'
 // export const baseUrl = 'https://6635-61-176-96-198.ngrok-free.app'
 export const wsUrl = 'wss://gpt.v-wim.xyz'
 // export const wsUrl = 'wss://6635-61-176-96-198.ngrok-free.app'

@@ -11,44 +11,31 @@
   <div class="s">
 
     <div class="login">
-      <div class="logo">
-        <img
-          :src="require('../assets/logo1.png')"
-          style="width:60px;height:60px">
+      <div style="width:60px;height:60px">
+<!--        <img-->
+<!--          :src="require('../assets/logo1.png')"-->
+<!--          style="width:60px;height:60px">-->
       </div>
-      <h2 v-if="showPage">欢迎登录
+      <h2 v-if="showPage" style="color: #fff">欢迎登录
       </h2>
-      <h2 v-if="!showPage">
+      <h2 v-if="!showPage" style="color: #fff">
         用户注册
       </h2>
       <el-card class="forms"
         v-if="showPage"
         shadow="never">
 
-        <el-form :model="form"
+        <el-form :model="loginForm"
           :rules="rules"
-          ref="ruleForm"
-          label-position="top"
-          label-width="0px"
+          ref="loginForm"
+          label-width="70px"
           class="demo-ruleForm">
-          <el-form-item
-            prop="mobile">
-            <el-input
-              prefix-icon="el-icon-mobile-phone"
-              placeholder="请输入手机号"
-              v-model="form.mobile"></el-input>
+          <el-form-item label="邮箱" prop="email">
+            <el-input prefix-icon="el-icon-message" placeholder="请填写邮箱" maxlength="32" v-model="loginForm.email" ></el-input>
           </el-form-item>
-          <el-form-item
-            prop="password">
-            <el-input
-              :type="type"
-              prefix-icon="el-icon-s-goods"
-              placeholder="请输入密码"
-              v-model="form.password">
-              <i slot="suffix"
-                @click="type == 'password'? type ='text':type ='password'"
-                class="el-input__icon el-icon-view"></i>
-            </el-input>
+
+          <el-form-item label="密码" prop="password"  v-show="!isCode">
+            <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="loginForm.password" show-password></el-input>
           </el-form-item>
           <el-form-item
             style="margin-bottom: 0;">
@@ -57,44 +44,84 @@
               @click="login"
               style="width:100%">登录</el-button>
           </el-form-item>
+
           <el-form-item
             style="margin-bottom: 0;">
           </el-form-item>
         </el-form>
       </el-card>
+
+
       <el-card class="forms"
         shadow="never"
         v-if="!showPage">
 
-        <accountVue
-          @reglogin="reglogin"
-          v-if="regs== 1">
-        </accountVue>
-        <simcodeVue
-          @reglogins="reglogins"
-          v-if="regs== 2">
-        </simcodeVue>
-        <div v-if="regs== 3">
-          <img
-            :src="require('../assets/erweima.jpg')"
-            style="width: 310px;">
-          <div
-            style="text-align:center">
-            关注公众号开通账号</div>
-        </div>
-        <mailcodeVue
-          v-if="regs== 4"
-          @regloginMail="regloginMail">
-        </mailcodeVue>
+        <el-form :model="registerForm" :rules="rules" ref="registerForm" label-width="70px">
+
+          <el-form-item label="邮箱" prop="email">
+            <el-input prefix-icon="el-icon-message" placeholder="请填写邮箱" maxlength="32" v-model="registerForm.email" ></el-input>
+          </el-form-item>
+
+          <el-form-item label="密码" prop="password">
+            <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="registerForm.password" show-password></el-input>
+          </el-form-item>
+
+          <el-form-item label="确认密码" prop="passwordConfirm">
+            <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="registerForm.passwordConfirm" show-password></el-input>
+          </el-form-item>
+
+          <el-form-item label="验证码" prop="code">
+            <el-input prefix-icon="el-icon-key" placeholder="请填写6位数字验证码" type="number" maxlength="6" v-model="registerForm.code">
+              <el-button slot="append" @click="sendEmailCode()" :disabled="disabled">{{ msg }}</el-button>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item
+              style="margin-bottom: 0;">
+            <el-button
+                type="primary"
+                @click="register"
+                style="width:100%">注册</el-button>
+          </el-form-item>
+
+          <el-form-item
+              style="margin-bottom: 0;">
+          </el-form-item>
+        </el-form>
       </el-card>
       <el-button
         v-if="showPage"
         @click="reg"
-        style="width:350px;margin-top:30px">还没有账号？立即注册</el-button>
+        style="width:445px;margin-top:30px">还没有账号？立即注册</el-button>
       <el-button
         v-if="!showPage"
         @click="reg"
-        style="width:350px;margin-top:30px">已有账号，立即登录</el-button>
+        style="width:445px;margin-top:30px">已有账号，立即登录</el-button>
+
+      <!-- 找回密码 -->
+<!--      <el-dialog @close="clearForm('findPasswordForm')" title="找回密码" :visible.sync="dialogFormVisible" width="40%">-->
+<!--        <el-form :model="findPasswordForm" ref="findPasswordForm" :rules="rules" label-width="60px">-->
+
+<!--          <el-form-item label="邮箱" prop="email">-->
+<!--            <el-input prefix-icon="el-icon-message" placeholder="请填写邮箱" maxlength="32" v-model="findPasswordForm.email"></el-input>-->
+<!--          </el-form-item>-->
+
+<!--          <el-form-item label="新密码" prop="password">-->
+<!--            <el-input prefix-icon="el-icon-lock" placeholder="请填写 6-18 位密码" type="password" maxlength="18" v-model="findPasswordForm.password" show-password></el-input>-->
+<!--          </el-form-item>-->
+
+<!--          <el-form-item label="验证码" prop="code">-->
+<!--            <el-input prefix-icon="el-icon-key" placeholder="请填写6位数字验证码" type="number" maxlength="6" v-model="findPasswordForm.code">-->
+<!--              <el-button slot="append" @click="sendEmailCode()" :disabled="disabled">{{ msg }}</el-button>-->
+<!--            </el-input>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          <el-button type="danger" :loading="loading" @click="submitFindPassword('findPasswordForm')">提 交</el-button>-->
+<!--        </div>-->
+<!--      </el-dialog>-->
+
     </div>
   </div>
 </template>
@@ -106,27 +133,92 @@ import mailcodeVue from './components/mailcode.vue'
 export default {
   components: { accountVue, simcodeVue, mailcodeVue },
   data() {
+    const email = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入邮箱！'))
+      } else if (!/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/.test(value)) {
+        return callback(new Error('请输入正确的邮箱！'))
+      } else {
+        return callback()
+      }
+    };
+    const password = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入密码！'))
+      } else if (!/(?=.*[a-zA-Z])[a-zA-Z0-9]{6,18}/.test(value)) {
+        return callback(new Error("密码长度在6-18个字符，只能包含数字、大小写字母 且 至少包含一个字母！"))
+      } else if (this.registerForm.passwordConfirm !== '') {
+        this.$refs.registerForm.validateField('passwordConfirm');
+        return callback()
+      } else {
+        return callback()
+      }
+    };
+    const passwordConfirm = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入确认密码！'))
+      } else if (!/(?=.*[a-zA-Z])[a-zA-Z0-9]{6,18}/.test(value)) {
+        return callback(new Error("密码长度在6-18个字符，只能包含数字、大小写字母 且 至少包含一个字母！"))
+      } else if (value !== this.registerForm.password) {
+        return callback(new Error('两次输入的密码不一致！'))
+      } else {
+        return callback()
+      }
+    };
+    const code = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入6位验证码！'))
+      } else if (value.length !== 6) {
+        return callback(new Error('请输入6位验证码！'))
+      } else {
+        return callback()
+      }
+    };
     return {
+      isCode: false,
       showPage: true,
-      form: {
-        mobile: '',
+      loginForm: {
+        email: '',
         password: ''
       },
+      registerForm: {
+        email: '',
+        password: '',
+        passwordConfirm: '',
+        code: ''
+      },
       disabled: false,
-      time: '',
-      type: 'password',
+      msg: '点击获取验证码',
+      count: 60,
+      timer: 0,
+      // 按钮加载
+      loading: false,
       regs: 0,
       rules: {
-        mobile: [{ required: true, message: '请输入手机号', trigger: 'change' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'change' }]
+        email: [
+          { validator: email, trigger: 'blur' }
+        ],
+        password: [
+          { validator: password, trigger: 'blur' }
+        ],
+        passwordConfirm: [
+          { validator: passwordConfirm, trigger: 'blur'}
+        ],
+        code: [
+          { validator: code, trigger: 'blur' }
+        ]
       }
     }
   },
   methods: {
+    reg() {
+      this.showPage = !this.showPage
+    },
+    // 登录
     login() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.$https('LOGIN', this.form).then(res => {
+          this.$https('LOGIN', this.loginForm).then(res => {
             if (res.status != 200) {
               this.$alert(res.message, '提示')
             } else {
@@ -146,52 +238,61 @@ export default {
         }
       })
     },
-    reglogin(data) {
-      this.$https('REGISTER', data).then(res => {
-        if (res.status == 200) {
-          this.$message.success('注册成功！')
-          this.showPage = !this.showPage
-        } else {
-          this.$message.error(res.msg)
+    // 注册
+    register() {
+      this.$refs.registerForm.validate((valid) => {
+        if (valid) {
+          this.loading = true
+          this.$https('REGISTER', this.registerForm).then(_ => {
+            if(_) {
+              // 注册成功
+              this.reg()
+
+              this.$message({
+                message: '注册成功',
+                type: 'success'
+              })
+            }
+          }).finally(_ => {
+            this.loading = false
+          })
         }
-      })
+      });
     },
-    reglogins(data) {
-      this.$https('CODEREG', data).then(res => {
-        if (res.status == 200) {
-          this.$message.success('注册成功！')
-          this.showPage = !this.showPage
-          this.$alert(res.data, '提示')
-        } else {
-          this.$message.error(res.msg)
+    // 获取验证码
+    sendEmailCode() {
+      this.$refs.registerForm.validateField('email', result => {
+        if(!result) {
+          // 按钮倒计时
+          this.disabled = true;
+          this.msg = this.count-- + 's后重新获取';
+          this.timer = setInterval(() => {
+            this.msg = this.count-- + 's后重新获取';
+            if (this.count < 0) {
+              this.msg = '点击获取验证码';
+              this.count = 60;
+              this.disabled = false;
+              clearInterval(this.timer);
+            }
+          }, 1000);
+
+          // 发送验证码请求
+          common.getRequestCode(this.registerForm.email).then(_ => {
+            common.getEmailCode(this.registerForm.email, _.data.permissionCode).then(_ => {
+              if(_) {
+                // 通知邮箱发送
+                this.$notify({
+                  title: '邮箱验证码已发送',
+                  message: '验证码有效时长5分钟, 失效请重新发送',
+                  type: 'success',
+                  duration: 10 * 1000
+                })
+              }
+            })
+          })
         }
-      })
+      });
     },
-    regloginMail(data) {
-      this.$https('EMAILREG', data).then(res => {
-        if (res.status == 200) {
-          this.$message.success('注册成功！')
-          this.showPage = !this.showPage
-          this.$alert(res.data, '提示')
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
-    },
-    reg() {
-      this.showPage = !this.showPage
-      if (!this.showPage) {
-        this.$https('REGTYPE', {}).then(res => {
-          this.regs = res.data
-        })
-      }
-    },
-    _isMobile() {
-      let flag = navigator.userAgent.match(
-        /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-      )
-      return flag
-    }
   }
 }
 </script>
@@ -201,7 +302,8 @@ export default {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #fff;
+  background: url('../assets/bg.jpg') fixed no-repeat;
+  background-size: 100% 100%;
   display: flex;
   align-items: center;
   flex-flow: column;
@@ -210,7 +312,7 @@ export default {
     background: #fff;
   }
   .forms {
-    width: 350px;
+    width: 445px;
     background: #f6f8fa;
   }
 }
